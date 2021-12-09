@@ -2487,7 +2487,7 @@
 
 "@usedapp/core@^0.7.0":
   version "0.7.0"
-  resolved "https://registry.npmjs.org/@usedapp/core/-/core-0.7.0.tgz"
+  resolved "https://registry.yarnpkg.com/@usedapp/core/-/core-0.7.0.tgz#f642837d2f53f76f120f99e5972499111890ed4f"
   integrity sha512-qOUNx9bj+0eBurCdpG7kLhSKfimKRMq5T7abI9J+jikkCFj2cAuda2TSoPuGZ9eytewK1NBacAVGzUCsnc1ieA==
   dependencies:
     "@types/react" "17.0.1"

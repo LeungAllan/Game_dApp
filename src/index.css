@@ -86,3 +86,6 @@ button:active {
   border-color: #ffa600;
 }
 
+.errortext {
+  color: red;
+}
