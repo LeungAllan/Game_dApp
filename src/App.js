@@ -3,9 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./Pages/Home";
 import About from "./Pages/About";
-import Balance from "./Pages/ChkBalance";
+import WalletInfo from "./Pages/WalletInfo";
 import ItemList from "./Pages/ItemList";
-import Reward from "./Pages/Reward";
+import NFT from "./Pages/NFT";
 
 function App() {
   return (
@@ -13,9 +13,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/About" element={<About />} />
-          <Route path="/Balance" element={<Balance />} />
+          <Route path="/Wallet" element={<WalletInfo />} />
+          <Route path="/NFT" element={<NFT />} />
           <Route path="/ItemList" element={<ItemList />} />
-          <Route path="/Reward" element={<Reward />} />
         </Routes>
       </BrowserRouter>
 

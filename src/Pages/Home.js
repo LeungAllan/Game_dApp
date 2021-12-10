@@ -1,9 +1,10 @@
+import classes from "./Page.module.css";
 const Home = () => {
 
     return (
-        <div >
-            <h1> Landing Page</h1>
-            <h2>Home Page</h2>
+        <div className={classes.summary}>
+            <h2> Landing Page</h2>
+            <p>Home Page</p>
         </div>
         
     )

@@ -16,9 +16,8 @@ const { account } = useEthers();
           <li>
             <a href="/About">About Us</a>
           </li>
-          <li>{account && <a href="/Balance">My Balance</a>}</li>
-          <li>{account && <a href="/ItemList">My NFTs</a>}</li>
-          <li>{account && <a href="/Reward">My Daily Rewards</a>}</li>
+          <li>{account && <a href="/Wallet">My Wallet</a>}</li>
+          <li>{account && <a href="/NFT">My NFTs</a>}</li>
           <li>
             <ConnectBtn />
           </li>
