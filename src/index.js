@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 import "./index.css";
 import App from "./App";
@@ -18,8 +19,10 @@ const config: Config = {
 
 ReactDOM.render(
     <DAppProvider config={config}>
+      <Provider store={store}>
         <Header />
         <App />
+      </Provider>
     </DAppProvider>,
   document.getElementById("root")
 );
