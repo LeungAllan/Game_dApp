@@ -10,7 +10,7 @@ import Header from "./Pages/Header";
 import { DAppProvider, ChainId, Config } from "@usedapp/core";
 
 const config: Config = {
-  readOnlyChainId: ChainId.Rinkeby,
+  readOnlyChainId: ChainId.Rinkeby
   //readOnlyUrls: {
   //  [ChainId.Mainnet]:
   //    "https://mainnet.infura.io/v3/62687d1a985d4508b2b7a24827551934"
@@ -18,12 +18,11 @@ const config: Config = {
 };
 
 ReactDOM.render(
-    <DAppProvider config={config}>
-      <Provider store={store}>
-        <Header />
-        <App />
-      </Provider>
-    </DAppProvider>,
+  <DAppProvider config={config}>
+    <Provider store={store}>
+      <Header />
+      <App />
+    </Provider>
+  </DAppProvider>,
   document.getElementById("root")
 );
-
