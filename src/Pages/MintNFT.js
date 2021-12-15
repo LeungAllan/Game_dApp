@@ -65,13 +65,13 @@ const ClaimCoin = (props) => {
       <h2> Mint NFT </h2>
       <p>Connected Account : {account}</p>
       {state.status === "None" && <></>}
-      {state.status === "Exception" && (
+      {(state.status === "Exception" & ShowError)&& (
         <>
           {ShowError && <h2>交易失敗，參數不正確</h2>}
           <p>{ShowError && state.errorMessage}</p>
         </>
       )}
-      {state.status === "Mining" && (
+      {(state.status === "Mining" & ShowError) && (
         <div className={classes.summary}>
           <h2>
             Transaction in Progress
@@ -87,10 +87,9 @@ const ClaimCoin = (props) => {
           </h2>
         </div>
       )}
-      {state.status === "Success" && (
+      {(state.status === "Success" & ShowError) && (
         <div className={classes.summary}>
-          <h2>
-            Transaction Success!
+          {ShowError && <h2>Transaction Success!
             <br />
             <a
               href={getExplorerTransactionLink(
@@ -100,11 +99,11 @@ const ClaimCoin = (props) => {
             >
               {shortenTransactionHash(state.transaction.hash)}
             </a>
-            Block Number = {state.receipt.blockNumber}
-          </h2>
+            <p>Block Number = {state.receipt.blockNumber}</p>
+          </h2>}
         </div>
       )}
-      {state.status === "Fail" && (
+      {(state.status === "Fail" & ShowError)&& (
         <div className={classes.summary}>
           <h2>Transaction Fail!</h2>
           <p>

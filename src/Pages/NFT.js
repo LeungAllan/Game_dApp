@@ -60,7 +60,7 @@ export default function Contract() {
             )}{" "}
             NFT
           </p>
-          <p>Token Cost: {tokencost.toString()} wei / NFT</p>
+          <p>Token Cost: {(tokencost/100000000).toString()} wei / NFT</p>
         </div>
       )}
       <p> You can claim {tokenClaim} SmileCoins.</p>

@@ -17,9 +17,7 @@ const Header = () => {
             <a href="/About">About Us</a>
           </li>
           <li>{account && <a href="/Wallet">My Wallet</a>}</li>
-          <li>{account && <a href="/NFT">NFTs</a>}</li>
           <li>{account && <a href="/Mint">Mint </a>}</li>
-          <li>{account && <a href="/ItemList">NFT List </a>}</li>
           <li>
             <ConnectBtn />
           </li>

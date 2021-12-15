@@ -4,11 +4,23 @@ import classes from "./Page.module.css";
 
 const NFTCard = (props) => {
   return (
-    <li className={classes.NFTCard}>
-      <h2>{props.nfts.name}</h2>
-      <h3>{props.nfts.description}</h3>
-      <p>{props.nfts.image}</p>
-    </li>
+    <ul >
+      {props.nfts.map((nft) => ( 
+        <div className={classes.NFTCard}>
+          <table border='0'>
+            <tr><td rowspan='3' ><img src={nft.image} alt="NFT image" width="100" /></td>
+              <td width="100px" valign="top" align="right">Name :</td>
+              <td valign="top" align="left">{nft.name}</td>
+             </tr>
+            <tr>
+              <td valign="top" align="right">Description :</td>
+              <td valign="top" align="left">{nft.description}</td>
+            </tr>
+          </table>
+        </div>
+        
+      ))}
+    </ul>
   );
 };
 
