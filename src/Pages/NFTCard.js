@@ -8,7 +8,7 @@ const NFTCard = (props) => {
       {props.nfts.map((nft) => ( 
         <div className={classes.NFTCard}>
           <table border='0'>
-            <tr><td rowspan='3' ><img src={nft.image} alt="NFT image" width="100" /></td>
+            <tr><td rowspan='3' ><img src={nft.image} alt="NFT" width="100" /></td>
               <td width="100px" valign="top" align="right">Name :</td>
               <td valign="top" align="left">{nft.name}</td>
              </tr>

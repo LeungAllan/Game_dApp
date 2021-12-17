@@ -41,7 +41,7 @@ const NFTList = () => {
 
     const loadedMeta = [];
 
-    const dummy = tokenURI.map(async (token) => {
+    tokenURI.map(async (token) => {
     try {
       /*
       const response = await fetch(
@@ -58,6 +58,7 @@ const NFTList = () => {
     
       for (const key in data) {
         loadedMeta.push({
+          id: key,
           name: data.name,
           description: data.description,
           image: data.image
@@ -76,7 +77,7 @@ const NFTList = () => {
     }
   });
     setIsLoading(false);
-  }, []);
+  }, [tokenID]);
 
   useEffect(() => {
       getMetaData();

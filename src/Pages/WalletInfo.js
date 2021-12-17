@@ -4,7 +4,6 @@ import { formatEther, formatUnits } from "@ethersproject/units";
 import classes from "./Page.module.css";
 import NFT from "./NFT";
 import NFTList from "./NFTList";
-import TESTAPP from "./test";
 
 const Balance = () => {
   const { account, chainId } = useEthers();
@@ -26,7 +25,6 @@ const Balance = () => {
       </div>
     </div>
     <NFT />
-    <TESTAPP />
     <NFTList />
     </Fragment>
   );

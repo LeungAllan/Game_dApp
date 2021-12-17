@@ -9,8 +9,9 @@ const abi = new utils.Interface(abiJSON);
 const Testapp = () => {
   const [address] = useState("0x412364A058d8A7D33517D312A78b3de2174601c0");
   const { account } = useEthers();
-
-  // 可以用 useContractCalls 來打包
+  const [ state, setState ] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const [tokenIDs] = useContractCalls([
     {
@@ -19,40 +20,66 @@ const Testapp = () => {
       method: "walletOfOwner",
       args: [account]
     }
-  ]);
+  ]);;
 
-  const testdata = JSON.stringify(tokenIDs, ["hex"]);
-  const { state, setState } = useState(testdata);
-  const DataAry2 = [];
-  /*
   const transformdata = useCallback(() => {
-    if (testdata !== "") {
-      console.log(testdata);
-      const data = testdata
-        .replace(/{"hex":/g, "")
-        .replace(/}/g, "")
-        .replace(/\[\[/g, "")
-        .replace(/\]\]/g, "");
+    setIsLoading(true);
+    
+    try {
+      if (JSON.stringify(tokenIDs, ["hex"]) !== "") {
+        const data = JSON.stringify(tokenIDs, ["hex"])
+          .replace(/{"hex":/g, "")
+          .replace(/}/g, "")
+          .replace(/\[\[/g, "")
+          .replace(/\]\]/g, "");
 
-      const DataAry = data.split(",");
-      DataAry2.push(
-        DataAry.map((item) => {
-          return parseInt(item.substring(3, item.length - 1), 16);
-        })
-      );
-    }
-  }, [testdata, DataAry2]);
+        const DataAry = data.split(",");
+        const DataAry2 = [];
+
+        DataAry2.push(
+          DataAry.map((item) => {
+            return parseInt(item.substring(3, item.length - 1), 16);
+          })
+        );
+
+        setState(JSON.stringify(DataAry2));
+    }} catch (error){
+      setError(error.message);
+    };
+    setIsLoading(false);
+  },[setState, tokenIDs]);
 
   useEffect(() => {
     transformdata();
-  }, [transformdata]);
-*/
+  }, [state, transformdata]);
+
+
+  let content = "No Record";
+  let content2 = [];
+  
+  if (error) {
+    content = <p>{error}</p>;
+  }
+  
+  if (isLoading) {
+    content = <p>Loading...</p>;
+  }
+
+  if (state!==null) {
+    content = state;
+    content2 = state.replace(/\[\[/g, "").replace(/\]\]/g, "").split(",");
+
+  };
+
   return (
     <div className={classes.NFTList}>
-      <p>Data: {testdata}</p>
-      <p>====</p>
-      <p> Data ARy in Json : {DataAry2}</p>: <p> No Record </p>}<p>====</p>
-      <p>{JSON.stringify(tokenIDs)}</p>
+      {content}
+      <p>{content2[0]}</p>
+      <p>{content2[1]}</p>
+      <p>{content2[2]}</p>
+      <p>{content2[3]}</p>
+      <p>{content2[4]}</p>
+      <p>{content2[5]}</p>
     </div>
   );
 };
