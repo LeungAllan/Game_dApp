@@ -55,12 +55,23 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 12px;
   text-align: center;
+  position: relative;
   color: white;
   width: 90%;
   display:block;
   overflow-y:scroll;
 }
-
+.NFTThumList {
+  margin: 1rem;
+  padding: 1rem;
+  background-color: #010003;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+  display:block;
+  overflow-y:scroll;
+}
 .NFTCard {
   margin: 1rem;
   padding: 1rem;
@@ -72,6 +83,18 @@
   width: 90%;
   display:block;
   overflow-y:scroll;
+}
+.NFTthumb {
+  margin: 1rem;
+  padding: 1rem;
+  background-color: #524600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  position: relative;
+  max-width: 45rem;
+  border-radius: 12px;
+  text-align: Left;
+  color: white;
+  display:block;
 }
 
 .NFTCard h2 {

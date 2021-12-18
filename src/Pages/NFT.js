@@ -1,6 +1,6 @@
 //import { Interface } from '@ethersproject/abi';
 import { utils } from "ethers";
-import { useContractCalls } from "@usedapp/core";
+import { useContractCalls,shortenAddress } from "@usedapp/core";
 import { useState } from "react";
 import { useEthers } from "@usedapp/core";
 import { formatUnits } from "@ethersproject/units";
@@ -48,7 +48,7 @@ export default function Contract() {
   return (
     <div className={classes.summary}>
       <h2>NFT Contract Information</h2>
-      <p>NFT Contract Address：{address}</p>
+      <p>NFT Contract Address：{shortenAddress(address)}</p>
       <p>NFT Name：{tokenName}</p>
 
       {tokenBalance && (

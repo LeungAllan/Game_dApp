@@ -1,9 +1,9 @@
 import { Fragment } from "react";
-import { useEtherBalance, useEthers, useTokenBalance } from "@usedapp/core";
+import { useEtherBalance, useEthers, useTokenBalance,shortenAddress } from "@usedapp/core";
 import { formatEther, formatUnits } from "@ethersproject/units";
 import classes from "./Page.module.css";
 import NFT from "./NFT";
-import NFTList from "./NFTList";
+import NFTthumb from "./NFTthumbnail";
 
 const Balance = () => {
   const { account, chainId } = useEthers();
@@ -18,14 +18,14 @@ const Balance = () => {
       <h3>This page can show connected wallet stocks: Ethers, Matic, Smilecoin</h3>
 
       <div>
-        <h3>{account && <p>Account: {account}</p>}</h3>
+        <h3>{account && <p>Account: {shortenAddress(account)}</p>}</h3>
         <h3>Ethers: {etherBalance ? formatEther(etherBalance) : 0 } {(chainId===1 || chainId===4 )&& "ETH"}{chainId===137 && "MATIC"}</h3>
         <h3>Smiles: {SmileBalance ? formatUnits(SmileBalance, 6).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0 }</h3>
         {chainId!==4 && <font class="errortext">Please change to use Rinkeby</font>}
       </div>
     </div>
     <NFT />
-    <NFTList />
+    <NFTthumb />
     </Fragment>
   );
 };

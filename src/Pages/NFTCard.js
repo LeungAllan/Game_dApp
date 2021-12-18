@@ -1,5 +1,4 @@
 import React from "react";
-
 import classes from "./Page.module.css";
 
 const NFTCard = (props) => {

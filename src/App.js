@@ -6,7 +6,7 @@ import WalletInfo from "./Pages/WalletInfo";
 import ItemList from "./Pages/NFTList";
 import NFT from "./Pages/NFT";
 import MintNFT from "./Pages/MintNFT";
-import Test from "./Pages/test";
+
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
         <Route exact path="/NFT" element={<NFT />} />
         <Route exact path="/ItemList" element={<ItemList />} />
         <Route exact path="/Mint" element={<MintNFT />} />
-        <Route exact path="/Test" element={<Test />} />
+        
       </Routes>
     </BrowserRouter>
   );

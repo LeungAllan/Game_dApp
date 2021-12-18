@@ -2,7 +2,7 @@ import { utils } from "ethers";
 import { useEthers, useContractCalls } from "@usedapp/core";
 import { useState, useEffect, useCallback } from "react";
 import classes from "./Page.module.css";
-import NFTCard from "./NFTCard";
+import NFTthumb from "./NFTthumb";
 import abiJSON from "../Contract/NFTContract.json";
 const abi = new utils.Interface(abiJSON);
 
@@ -127,10 +127,10 @@ const NFTList = () => {
   let content = "";
 
   if (NFTlist.length > 0) {
-      content = <NFTCard nfts={NFTlist } />;
+      content = <NFTthumb nfts={NFTlist } />;
   }
 
-  if (error) {
+  if (error & Arystate) {
     content = <p>{error}</p>;
   }
 
@@ -138,7 +138,7 @@ const NFTList = () => {
     content = <p>Loading...</p>;
   }
 
-  return <div className={classes.NFTList}>{content}</div>;
+  return <div className={classes.NFTThumbList}>{content}</div>;
 };
 
 export default NFTList;
