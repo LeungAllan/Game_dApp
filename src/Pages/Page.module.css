@@ -58,8 +58,7 @@
   position: relative;
   color: white;
   width: 90%;
-  display:block;
-  overflow-y:scroll;
+  display: block;
 }
 .NFTThumList {
   margin: 1rem;
@@ -69,8 +68,7 @@
   border-radius: 12px;
   text-align: center;
   color: white;
-  display:block;
-  overflow-y:scroll;
+  display: block;
 }
 .NFTCard {
   margin: 1rem;
@@ -81,8 +79,7 @@
   text-align: center;
   color: white;
   width: 90%;
-  display:block;
-  overflow-y:scroll;
+  display: block;
 }
 .NFTthumb {
   margin: 1rem;
@@ -94,7 +91,7 @@
   border-radius: 12px;
   text-align: Left;
   color: white;
-  display:block;
+  display: block;
 }
 
 .NFTCard h2 {
