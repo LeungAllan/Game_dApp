@@ -1,12 +1,11 @@
 //import { Interface } from '@ethersproject/abi';
 import { utils } from "ethers";
-import { useContractCalls,shortenAddress } from "@usedapp/core";
+import { useContractCalls, shortenAddress } from "@usedapp/core";
 import { useState } from "react";
 import { useEthers } from "@usedapp/core";
 import { formatUnits } from "@ethersproject/units";
 import classes from "./Page.module.css";
 import abiJSON from "../Contract/NFTContract.json";
-import ClaimCoin from "./ClaimCoin";
 
 const abi = new utils.Interface(abiJSON);
 
@@ -42,8 +41,8 @@ export default function Contract() {
     }
   ]);
 
-  const tokenOwned = parseInt(Math.ceil(tokenBalance), 10);
-  const tokenClaim = tokenOwned * 10;
+  const tokenOwned = parseInt(Math.ceil(tokenBalance), 1000);
+  const tokenClaim = tokenOwned * 1000;
 
   return (
     <div className={classes.summary}>
@@ -60,11 +59,13 @@ export default function Contract() {
             )}{" "}
             NFT
           </p>
-          <p>Token Cost: {(tokencost/100000000).toString()} wei / NFT</p>
+          <p>Token Cost: {(tokencost / 100000000).toString()} wei / NFT</p>
         </div>
       )}
-      <p> You can claim {tokenClaim} SmileCoins.</p>
-      <ClaimCoin QtyClaim={tokenClaim} />
+      <p> You can claim {tokenBalance*1000} SmileCoins.</p>
+      <a href="/Claim">
+        <button>Claim Smilecoin</button>
+      </a>
     </div>
   );
 }

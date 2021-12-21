@@ -60,7 +60,9 @@ const MintNFT = (props) => {
       {state.status === "None" && <></>}
       {state.status === "Exception" && (
         <>
-          {ShowError && <h2>交易失敗，參數不正確</h2>}
+          {ShowError && (
+            <h2>Transaction Failure，Parameters are not correct!</h2>
+          )}
           <p>{ShowError && state.errorMessage}</p>
         </>
       )}
