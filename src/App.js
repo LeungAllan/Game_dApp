@@ -7,6 +7,8 @@ import ItemList from "./Pages/NFTList";
 import NFT from "./Pages/NFT";
 import MintNFT from "./Pages/MintNFT";
 import Claim from "./Pages/ClaimCoin";
+import Count from "./Pages/CountDown";
+import Test from "./Pages/test";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route exact path="/ItemList" element={<ItemList />} />
         <Route exact path="/Mint" element={<MintNFT />} />
         <Route exact path="/Claim" element={<Claim />} />
+        <Route exact path="/Count" element={<Count />} />
+        <Route exact path="/Test" element={<Test />} />
       </Routes>
     </BrowserRouter>
   );

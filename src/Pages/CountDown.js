@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const Test = () => {
-  const targetDate = "12/20/2021 15:49:00";
+  const targetDate = "12/25/2021 15:49:00";
 
   const calculateTimeLeft = () => {
     //let year = new Date().getFullYear();

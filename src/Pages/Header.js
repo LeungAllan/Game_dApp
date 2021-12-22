@@ -19,6 +19,8 @@ const Header = () => {
           <li>{account && <a href="/Wallet">My Wallet</a>}</li>
           <li>{account && <a href="/Mint">Mint </a>}</li>
           <li>{account && <a href="/Claim">Claim </a>}</li>
+          <li>{account && <a href="/Count">Count Down </a>}</li>
+          <li>{account && <a href="/Test">Test </a>}</li>
 
           <li>
             <ConnectBtn />
