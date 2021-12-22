@@ -15,17 +15,13 @@ import classes from "./Page.module.css";
 
 const CoinABI = new Interface(coinJSON);
 const Coincontract = new Contract(
-  "0x8ddEb68dDa25B11b0a187E1366b65D21f3b5C5d8",
+  "0x65254Be8519e97DB783d0FfDE6646E104c5277a5",
   CoinABI
 );
 
 const ClaimCoin = () => {
-  
-   const { send, state } = useContractFunction(
-    Coincontract,
-    "transfer"
-  );
-  
+  const { send, state } = useContractFunction(Coincontract, "transfer");
+
   const { account, chainId } = useEthers();
   const [ShowError, SetShowError] = useState(false);
   const abi = new Interface(nftJSON);
@@ -51,16 +47,14 @@ const ClaimCoin = () => {
     return hash.substr(0, 6) + "..." + hash.substr(-4);
   }
 
-  
   let ClaimQty = tokenBalance * 1000; // 1 NFT => can claim 1000 smilecoin
 
   const RunClaim = () => {
-    if (tokenBalance>0) {
-
+    if (tokenBalance > 0) {
       send(account, ClaimQty);
       state.status = "";
       SetShowError(true);
-      ClaimQty=0;
+      ClaimQty = 0;
     }
   };
 
@@ -132,11 +126,15 @@ const ClaimCoin = () => {
         <p>NFT Name：{tokenName}</p>
         <p>Network ID = {chainId}</p>
       </div>
-      
-      {(chainId === 4)  && (
+
+      {chainId === 4 && (
         <div>
-          <p>You can claim Smilecoin {ClaimQty}  pcs.</p>
-          {tokenBalance>0 ? <button onClick={RunClaim}>Claim Smilecoin</button>:""}
+          <p>You can claim Smilecoin {ClaimQty} pcs.</p>
+          {tokenBalance > 0 ? (
+            <button onClick={RunClaim}>Claim Smilecoin</button>
+          ) : (
+            ""
+          )}
         </div>
       )}
       {chainId !== 4 && (
@@ -147,6 +145,5 @@ const ClaimCoin = () => {
       )}
     </div>
   );
-
 };
 export default ClaimCoin;
