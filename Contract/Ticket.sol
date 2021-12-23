@@ -1209,7 +1209,7 @@ contract Ticket is ERC721Enumerable, Ownable {
   uint256 public cost = 1 ether * 75 / 1000;
 
   bool public paused = false;
-  bool public onlyWhitelisted = false;
+  bool public onlyWhitelisted = true;
   address[] public whitelistedAddresses;
   mapping(address => uint256) public addressMintedBalance;
 
