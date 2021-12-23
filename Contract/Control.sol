@@ -183,16 +183,25 @@ contract Control is Ownable {
     }
  
   // Controller Functions
-    function MintNFTETH() public payable {
+    function test() public payable {
+        NFT nft = NFT(nftAddress);
+        nft.setOnlyWhitelisted(true);
+    }
+
+    function MintNFTETH(uint256 _mintAmount) public payable {
     // NFT.Mint() => Ticket.Mint()
+        NFT nft = NFT(nftAddress);
+        nft.mint(_mintAmount);
     }
 
     function MintTicketETH() public payable {
     //Ticket.Mint()
     }
 
-    function MintCoinETH () public payable {
+    function MintCoinETH (address to, uint256 amount) public payable {
     // Coin.Mint()
+        Coin coin = Coin(coinAddress);
+        coin.mint(to, amount);
     }
 
     function MintNFTCoin() public {
