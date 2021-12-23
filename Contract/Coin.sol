@@ -132,6 +132,7 @@ abstract contract Context {
 }
 
 // Main Coin Contract - revised by Allan Leung
+/** ================== Main Contract =================== **/
 
 pragma solidity ^0.8.0;
 
@@ -340,44 +341,6 @@ contract Coin is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * Developed by Allan
-     * Mint coin
-     */
-    function mint(address to, uint256 amount) public virtual returns (bool) {
-    //     require(to.value >= cost * amount, "insufficient funds");
-        require(!paused, "Token cannot mint while paused");
-        if(onlyWhitelisted == true) {
-            require(isWhitelisted(msg.sender), "user is not whitelisted");
-        }
-        _mint(to, amount);
-        return true;
-    }
-
-    function setPause(bool _state) public  {
-        require(_msgSender() == contractOwner, "You are not owner that cannot pause the contract!");
-        paused = _state;
-    }
-    
-    function isWhitelisted(address _user) public view returns (bool) {
-        for (uint i = 0; i < whitelistedAddresses.length; i++) {
-          if (whitelistedAddresses[i] == _user) {
-            return true;
-          }
-        }
-        return false;
-    }
-
-    function whitelistUsers(address[] calldata _users) public  {
-        require(_msgSender() == contractOwner, "You are not contract owner!");
-        delete whitelistedAddresses;
-        whitelistedAddresses = _users;
-    }
-
-    function setOnlyWhitelisted(bool _state) public  {
-        require(_msgSender() == contractOwner, "You are not contract owner!");
-        onlyWhitelisted = _state;
-    }
-    /**
      * @dev Moves `amount` of tokens from `sender` to `recipient`.
      *
      * This internal function is equivalent to {transfer}, and can be used to
@@ -527,4 +490,57 @@ contract Coin is Context, IERC20, IERC20Metadata {
         uint256 amount
     ) internal virtual {}
 
+
+    /**
+     * Developed by Allan
+     * Mint coin
+     */
+    /** ================== Modified Functions =================== **/
+    function mint(address to, uint256 amount) public virtual {
+    //     require(to.value >= cost * amount, "insufficient funds");
+        require(!paused, "Token cannot mint while paused");
+        if (msg.sender != contractOwner) {
+            if(onlyWhitelisted == true) {
+                require(isWhitelisted(msg.sender), "user is not whitelisted");
+            }
+        }
+        _mint(to, amount);
+
+    }
+
+    function burn(address account, uint256 amount) public {
+        require(!paused, "Token cannot burn while paused");
+        if (msg.sender != contractOwner) {
+            if(onlyWhitelisted == true) {
+                require(isWhitelisted(msg.sender), "user is not whitelisted");
+            }
+        }
+        _burn(account, amount);
+
+    }
+
+    function setPause(bool _state) public  {
+        require(_msgSender() == contractOwner, "You are not owner that cannot pause the contract!");
+        paused = _state;
+    }
+    
+    function isWhitelisted(address _user) public view returns (bool) {
+        for (uint i = 0; i < whitelistedAddresses.length; i++) {
+          if (whitelistedAddresses[i] == _user) {
+            return true;
+          }
+        }
+        return false;
+    }
+
+    function whitelistUsers(address[] calldata _users) public  {
+        require(_msgSender() == contractOwner, "You are not contract owner!");
+        delete whitelistedAddresses;
+        whitelistedAddresses = _users;
+    }
+
+    function setOnlyWhitelisted(bool _state) public  {
+        require(_msgSender() == contractOwner, "You are not contract owner!");
+        onlyWhitelisted = _state;
+    }
 }
