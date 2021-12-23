@@ -168,40 +168,46 @@ contract Control is Ownable {
         }
 
   // Helper functions
-  function setNFTaddress(address _nftaddress) public onlyOwner {
-    nftAddress=_nftaddress;
-  }
+    function setNFTAddress(address _nftaddress) public onlyOwner {
+        nftAddress=_nftaddress;
+    }
+    function setCoinAddress(address _coinAddress) public onlyOwner {
+        coinAddress=_coinAddress;
+    }
+    function setTicketAddress(address _ticketAddress) public onlyOwner {
+        ticketAddress=_ticketAddress;
+    }
 
-  function pause(bool _state) public onlyOwner {
-    paused = _state;
-  }
+    function pause(bool _state) public onlyOwner {
+        paused = _state;
+    }
  
   // Controller Functions
-    function Mint_NFT_by_ETH() public payable {
+    function MintNFTETH() public payable {
     // NFT.Mint() => Ticket.Mint()
     }
 
-    function Mint_Ticket_by_ETH() public payable {
+    function MintTicketETH() public payable {
     //Ticket.Mint()
     }
 
-    function	Mint_Coin_by_ETH () public payable {
+    function MintCoinETH () public payable {
     // Coin.Mint()
     }
 
-    function Mint_NFT_by_Coin() public {
+    function MintNFTCoin() public {
     //	1) Check Coin Receive 2) NFT.Mint() => Ticket.Mint()
     }
 
-    function Mint_Ticket_by_Coin() public {
+    function MintTicketCoin() public {
     // 1) CheckCoin Receive 2) Ticket.Mint()
     }
 
-    function Redeem_Prize() public {
+    function RedeemPrize() public {
     //	Ticket.burn()
     }
 
-    function redeem_coin() public {
+    function RedeemCoin() public {
     // 1) Coin Mint, 2) Burn ticket
     }
 
