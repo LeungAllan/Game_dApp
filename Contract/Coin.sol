@@ -171,7 +171,7 @@ contract Coin is Context, IERC20, IERC20Metadata {
     string private _symbol;
 
     bool public paused = false;  // Pause for Mint
-    bool public onlyWhitelisted = false;
+    bool public onlyWhitelisted = true;
     address public contractOwner;
     address[] public whitelistedAddresses;
 
