@@ -167,6 +167,7 @@ contract Control is Ownable {
             ContractDesc = _description;
         }
 
+  // Helper functions
   function setNFTaddress(address _nftaddress) public onlyOwner {
     nftAddress=_nftaddress;
   }
@@ -175,7 +176,37 @@ contract Control is Ownable {
     paused = _state;
   }
  
-  function redeem_coin() public {
-  // 1) Coin Mint, 2) Burn ticket
-  }
+  // Controller Functions
+    function Mint_NFT_by_ETH() public payable {
+    // NFT.Mint() => Ticket.Mint()
+    }
+
+    function Mint_Ticket_by_ETH() public payable {
+    //Ticket.Mint()
+    }
+
+    function	Mint_Coin_by_ETH () public payable {
+    // Coin.Mint()
+    }
+
+    function Mint_NFT_by_Coin() public {
+    //	1) Check Coin Receive 2) NFT.Mint() => Ticket.Mint()
+    }
+
+    function Mint_Ticket_by_Coin() public {
+    // 1) CheckCoin Receive 2) Ticket.Mint()
+    }
+
+    function Redeem_Prize() public {
+    //	Ticket.burn()
+    }
+
+    function redeem_coin() public {
+    // 1) Coin Mint, 2) Burn ticket
+    }
+
+    function luckydraw() public {
+    // All minted NFT buyers can join luckydraw
+    // transfer received coin to winner
+    }
 }
