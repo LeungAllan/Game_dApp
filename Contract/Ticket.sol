@@ -1209,7 +1209,7 @@ contract Ticket is ERC721Enumerable, Ownable {
   uint256 public cost = 1 ether * 75 / 1000;
 
   bool public paused = false;
-  bool public onlyWhitelisted = true;
+  bool public onlyWhitelisted = false;
   address[] public whitelistedAddresses;
   mapping(address => uint256) public addressMintedBalance;
 
@@ -1326,4 +1326,10 @@ contract Ticket is ERC721Enumerable, Ownable {
     require(success);
 	
   }
+
+  function burn(uint256 tokenId) public virtual {
+        //solhint-disable-next-line max-line-length
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
+        _burn(tokenId);
+    }
 }
