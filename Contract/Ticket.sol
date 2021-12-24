@@ -1247,6 +1247,24 @@ contract Ticket is ERC721Enumerable, Ownable {
     }
   }
   
+  function mintTo(address _to, uint256 _mintAmount) public payable {
+    uint256 supply = totalSupply();
+    require(!paused);
+    require(_mintAmount > 0);
+
+    if (msg.sender != owner()) {
+        if(onlyWhitelisted == true) {
+            require(isWhitelisted(msg.sender), "user is not whitelisted");
+        }
+        require(msg.value >= cost * _mintAmount, "insufficient funds");
+    }
+
+    for (uint256 i = 1; i <= _mintAmount; i++) {
+      addressMintedBalance[_to]++;
+      _safeMint(_to, supply + i);
+    }
+  }
+
   function isWhitelisted(address _user) public view returns (bool) {
     for (uint i = 0; i < whitelistedAddresses.length; i++) {
       if (whitelistedAddresses[i] == _user) {
