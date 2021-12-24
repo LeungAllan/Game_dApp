@@ -1346,8 +1346,11 @@ contract Ticket is ERC721Enumerable, Ownable {
   }
 
   function burn(uint256 tokenId) public virtual {
-        //solhint-disable-next-line max-line-length
-        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721Burnable: caller is not owner nor approved");
-        _burn(tokenId);
+    if (msg.sender != owner()) {
+        if(onlyWhitelisted == true) {
+            require(isWhitelisted(msg.sender), "Caller is not whitelisted or owner.");
+        }
     }
+    _burn(tokenId);
+  }
 }
