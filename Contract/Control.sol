@@ -110,6 +110,8 @@ interface IERC20Metadata is IERC20 {
 pragma solidity ^0.8.0;
 interface Ticket {
 
+  function balanceOf(address owner) external view returns (uint256); 
+  function ownerOf(uint256 tokenId) external view returns (address owner);
   function mint(uint256 _mintAmount) external payable ;
   function isWhitelisted(address _user) external view returns (bool);
   function walletOfOwner(address _owner) external view returns (uint256[] memory);
@@ -123,6 +125,7 @@ interface Ticket {
   function whitelistUsers(address[] calldata _users) external ;
   function ChecktBalance() external view  returns (uint256);
   function withdraw() external payable ;
+  function burn(uint256 tokenId) external;  
 }
 
 pragma solidity ^0.8.0;
@@ -156,9 +159,15 @@ contract Control is Ownable {
     string public ContractDesc;
     bool public paused = false;
 
+    // 10000 coin to buy ticket
+    uint256 public ticketAmountToSell = 10000;  
+
     address public nftAddress;
     address public coinAddress;
     address public ticketAddress;
+
+    event eventRedeemPrize(address indexed _from, uint256 indexed _tokenId, uint timestamp);
+    event eventRedeemCoin(address indexed _from, uint256 indexed _tokenId, address indexed _to, uint256 amount, uint timestamp);
 
     constructor(
         string memory _name,
@@ -181,7 +190,34 @@ contract Control is Ownable {
     function pause(bool _state) public onlyOwner {
         paused = _state;
     }
+
+    function setTicketAmtToSell(uint256 _NewAmount) public onlyOwner {
+        ticketAmountToSell = _NewAmount;
+    }
  
+  // View functions for call
+    function CoinBalanceOf(address account) public view returns (uint256) {
+        Coin coin = Coin(coinAddress);
+        return coin.balanceOf(account);
+    }
+    function NFTBalanceOf(address account) public view returns (uint256) {
+        NFT nft = NFT(nftAddress);
+        return nft.balanceOf(account);
+    }
+    function TicketBalanceOf(address account) public view returns (uint256) {
+        Ticket ticket = Ticket(ticketAddress);
+        return ticket.balanceOf(account);
+    }
+
+    function NFTwalletOfOwner(address _owner) public view returns (uint256[] memory) {
+        NFT nft = NFT(nftAddress);
+        return nft.walletOfOwner(_owner);       
+    }
+    function TicketwalletOfOwner(address _owner) public view returns (uint256[] memory) {
+        Ticket ticket = Ticket(ticketAddress);
+        return ticket.walletOfOwner(_owner);       
+    }
+
   // Controller Functions
     function test() public payable {
         NFT nft = NFT(nftAddress);
@@ -191,11 +227,13 @@ contract Control is Ownable {
     function MintNFTETH(uint256 _mintAmount) public payable {
     // NFT.Mint() => Ticket.Mint()
         NFT nft = NFT(nftAddress);
-        nft.mint(_mintAmount);
+        nft.mint{value: msg.value}(_mintAmount);
     }
 
-    function MintTicketETH() public payable {
+    function MintTicketETH(uint256 _mintAmount) public payable {
     //Ticket.Mint()
+        Ticket ticket = Ticket(ticketAddress);
+        ticket.mint{value: msg.value}(_mintAmount);
     }
 
     function MintCoinETH (address to, uint256 amount) public payable {
@@ -204,20 +242,46 @@ contract Control is Ownable {
         coin.mint(to, amount);
     }
 
-    function MintNFTCoin() public {
+    function MintNFTbyCoin() public {
     //	1) Check Coin Receive 2) NFT.Mint() => Ticket.Mint()
+
     }
 
-    function MintTicketCoin() public {
+    function MintTicketbyCoin(uint256 _BuyQty) public payable{
     // 1) CheckCoin Receive 2) Ticket.Mint()
+    //  e.g. say mint 1 ticket need 1000 coin
+
+        Coin coin = Coin(coinAddress);
+        Ticket ticket = Ticket(ticketAddress);
+
+        uint256 coinBalance = CoinBalanceOf(msg.sender);
+        uint256 coinNeed = ticketAmountToSell * _BuyQty;
+        require(coinBalance >= coinNeed, "You have not enough coin to buy ticket!");
+
+        (bool sent) = coin.transferFrom(msg.sender, address(this), coinNeed);
+        require(sent, "Failed to transfer coins to us!");
+
+        ticket.mint{value: msg.value}(_BuyQty);
     }
 
-    function RedeemPrize() public {
+    function RedeemPrize(uint256 _tokenId) public {
     //	Ticket.burn()
+        Ticket ticket = Ticket(ticketAddress);
+        require(msg.sender == ticket.ownerOf(_tokenId), "You are not ticket owner!");
+        ticket.burn(_tokenId);
+        
+        emit eventRedeemPrize(msg.sender, _tokenId, block.timestamp);
     }
 
-    function RedeemCoin() public {
+    function RedeemCoin(address to, uint256 amount, uint256 _tokenId) public {
     // 1) Coin Mint, 2) Burn ticket
+        Coin coin = Coin(coinAddress);
+        Ticket ticket = Ticket(ticketAddress);
+        require(msg.sender == ticket.ownerOf(_tokenId), "You are not ticket owner!");
+        coin.mint(to, amount);
+        ticket.burn(_tokenId);
+
+        emit eventRedeemCoin(msg.sender, _tokenId, to, amount, block.timestamp);
     }
 
     function luckydraw() public {
