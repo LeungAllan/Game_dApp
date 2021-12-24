@@ -163,20 +163,24 @@ contract Control is Ownable {
     // 10000 coin to buy ticket
     uint256 public ticketAmountToSell = 10000;  
 
-    address private Contoller;
+    address private Controller;
     address public nftAddress;
     address public coinAddress;
     address public ticketAddress;
 
     event eventRedeemPrize(address indexed _from, uint256 indexed _tokenId, uint timestamp);
     event eventRedeemCoin(address indexed _from, uint256 indexed _tokenId, address indexed _to, uint256 amount, uint timestamp);
+    event eventMintNFTETH(address indexed _from, uint256 qty, uint timestamp);
+    event eventMintTicketETH(address indexed _from, uint256 qty, uint timestamp);
+    event eventMintCoinETH(address indexed _from, uint256 qty, address indexed _to, uint timestamp);
+    event eventMintTicketbyCoin(address indexed _from, uint256 BuyQty, uint256 coinNeed, uint timestamp);
 
     constructor(
         string memory _name,
         string memory _description) {
             ContractName = _name;
             ContractDesc = _description;
-            Contoller=msg.sender;
+            Controller=msg.sender;
         }
 
   // Helper functions
@@ -226,36 +230,45 @@ contract Control is Ownable {
         return ticket.walletOfOwner(_owner);       
     }
 
-  // Controller Functions
+    // Controller Functions
     function test() public payable {
         NFT nft = NFT(nftAddress);
         nft.setOnlyWhitelisted(true);
     }
 
-    function MintNFTETH(uint256 _mintAmount) public payable {
+    function MintNFTETH(uint256 _mintAmount) public payable returns(bool) {
     // NFT.Mint() => Ticket.Mint()
         NFT nft = NFT(nftAddress);
         nft.mintTo{value: msg.value}(msg.sender, _mintAmount);
-    }
 
-    function MintTicketETH(uint256 _mintAmount) public payable {
+        emit eventMintNFTETH(msg.sender, _mintAmount, block.timestamp);
+        return true;
+    } //Checked
+
+    function MintTicketETH(uint256 _mintAmount) public payable returns(bool){
     //Ticket.Mint()
         Ticket ticket = Ticket(ticketAddress);
         ticket.mintTo{value: msg.value}(msg.sender, _mintAmount);
-    }
 
-    function MintCoinETH (address to, uint256 amount) public payable {
+        emit eventMintTicketETH(msg.sender, _mintAmount, block.timestamp);
+        return true;
+    } //Checked
+
+    function MintCoinETH (address to, uint256 amount) public payable returns(bool){
     // Coin.Mint()
         Coin coin = Coin(coinAddress);
         coin.mint(to, amount);
-    }
+
+        emit eventMintCoinETH(msg.sender, amount, to, block.timestamp);
+        return true;
+    } //Checked
 
     function MintNFTbyCoin() public {
     //	1) Check Coin Receive 2) NFT.Mint() => Ticket.Mint()
 
     }
 
-    function MintTicketbyCoin(uint256 _BuyQty) public payable{
+    function MintTicketbyCoin(uint256 _BuyQty) public payable returns(bool) {
     // 1) CheckCoin Receive 2) Ticket.Mint()
     //  e.g. say mint 1 ticket need 1000 coin
 
@@ -266,10 +279,15 @@ contract Control is Ownable {
         uint256 coinNeed = ticketAmountToSell * _BuyQty;
         require(coinBalance >= coinNeed, "You have not enough coin to buy ticket!");
 
-        (bool sent) = coin.transferFrom(msg.sender, Contoller, coinNeed);
-        require(sent, "Failed to transfer coins to us!");
-
+        (bool sentAllowance) = coin.increaseAllowance(Controller, coinNeed);
+        require(sentAllowance, "Failed to set Allowance!");
+        (bool sentTransfer) = coin.transferFrom(msg.sender, Controller, coinNeed);
+        require(sentTransfer, "Failed to transfer coins to us!");
+        //coin.burn(msg.sender, coinNeed);
         ticket.mint{value: msg.value}(_BuyQty);
+
+        emit eventMintTicketbyCoin(msg.sender, _BuyQty, coinNeed, block.timestamp);
+        return true;
     }
 
     function RedeemPrize(uint256 _tokenId) public {
@@ -279,18 +297,19 @@ contract Control is Ownable {
         ticket.burn(_tokenId);
         
         emit eventRedeemPrize(msg.sender, _tokenId, block.timestamp);
-    }
+    } //Checked
 
-    function RedeemCoin(address to, uint256 amount, uint256 _tokenId) public {
+    function RedeemCoin(address to, uint256 _tokenId) public returns (bool) {
     // 1) Coin Mint, 2) Burn ticket
         Coin coin = Coin(coinAddress);
         Ticket ticket = Ticket(ticketAddress);
         require(msg.sender == ticket.ownerOf(_tokenId), "You are not ticket owner!");
-        coin.mint(to, amount);
+        coin.mint(to, ticketAmountToSell);
         ticket.burn(_tokenId);
 
-        emit eventRedeemCoin(msg.sender, _tokenId, to, amount, block.timestamp);
-    }
+        emit eventRedeemCoin(msg.sender, _tokenId, to, ticketAmountToSell, block.timestamp);
+        return true;
+    } //Checked
 
     function luckydraw() public {
     // All minted NFT buyers can join luckydraw
