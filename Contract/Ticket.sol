@@ -1243,7 +1243,8 @@ contract Ticket is ERC721Enumerable, Ownable {
 
     for (uint256 i = 1; i <= _mintAmount; i++) {
       addressMintedBalance[msg.sender]++;
-      _safeMint(msg.sender, totalMinted + i);
+      totalMinted = totalMinted+i;
+      _safeMint(msg.sender, totalMinted);
     }
   }
   
@@ -1260,7 +1261,8 @@ contract Ticket is ERC721Enumerable, Ownable {
 
     for (uint256 i = 1; i <= _mintAmount; i++) {
       addressMintedBalance[_to]++;
-      _safeMint(_to, totalMinted + i);
+      totalMinted = totalMinted+i;
+      _safeMint(_to, totalMinted);
     }
   }
 
