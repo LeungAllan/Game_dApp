@@ -113,6 +113,7 @@ interface Ticket {
   function balanceOf(address owner) external view returns (uint256); 
   function ownerOf(uint256 tokenId) external view returns (address owner);
   function mint(uint256 _mintAmount) external payable ;
+  function mintTo(address _to, uint256 _mintAmount) external payable; 
   function isWhitelisted(address _user) external view returns (bool);
   function walletOfOwner(address _owner) external view returns (uint256[] memory);
   function tokenURI(uint256 tokenId) external view  returns (string memory);
@@ -162,6 +163,7 @@ contract Control is Ownable {
     // 10000 coin to buy ticket
     uint256 public ticketAmountToSell = 10000;  
 
+    address private Contoller;
     address public nftAddress;
     address public coinAddress;
     address public ticketAddress;
@@ -174,6 +176,7 @@ contract Control is Ownable {
         string memory _description) {
             ContractName = _name;
             ContractDesc = _description;
+            Contoller=msg.sender;
         }
 
   // Helper functions
@@ -194,6 +197,11 @@ contract Control is Ownable {
     function setTicketAmtToSell(uint256 _NewAmount) public onlyOwner {
         ticketAmountToSell = _NewAmount;
     }
+
+    function withdraw() public payable onlyOwner {
+        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(success);
+	}
  
   // View functions for call
     function CoinBalanceOf(address account) public view returns (uint256) {
@@ -227,13 +235,13 @@ contract Control is Ownable {
     function MintNFTETH(uint256 _mintAmount) public payable {
     // NFT.Mint() => Ticket.Mint()
         NFT nft = NFT(nftAddress);
-        nft.mint{value: msg.value}(_mintAmount);
+        nft.mintTo{value: msg.value}(msg.sender, _mintAmount);
     }
 
     function MintTicketETH(uint256 _mintAmount) public payable {
     //Ticket.Mint()
         Ticket ticket = Ticket(ticketAddress);
-        ticket.mint{value: msg.value}(_mintAmount);
+        ticket.mintTo{value: msg.value}(msg.sender, _mintAmount);
     }
 
     function MintCoinETH (address to, uint256 amount) public payable {
@@ -258,7 +266,7 @@ contract Control is Ownable {
         uint256 coinNeed = ticketAmountToSell * _BuyQty;
         require(coinBalance >= coinNeed, "You have not enough coin to buy ticket!");
 
-        (bool sent) = coin.transferFrom(msg.sender, address(this), coinNeed);
+        (bool sent) = coin.transferFrom(msg.sender, Contoller, coinNeed);
         require(sent, "Failed to transfer coins to us!");
 
         ticket.mint{value: msg.value}(_BuyQty);
