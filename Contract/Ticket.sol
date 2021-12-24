@@ -1207,6 +1207,7 @@ contract Ticket is ERC721Enumerable, Ownable {
   string public baseExtension = ".json";
   string public notRevealedUri;
   uint256 public cost = 1 ether * 75 / 1000;
+  uint256 public totalMinted;
 
   bool public paused = false;
   bool public onlyWhitelisted = false;
@@ -1231,7 +1232,6 @@ contract Ticket is ERC721Enumerable, Ownable {
   // public
   function mint(uint256 _mintAmount) public payable {
     require(!paused, "the contract is paused");
-    uint256 supply = totalSupply();
     require(_mintAmount > 0, "need to mint at least 1 NFT");
 
     if (msg.sender != owner()) {
@@ -1243,12 +1243,11 @@ contract Ticket is ERC721Enumerable, Ownable {
 
     for (uint256 i = 1; i <= _mintAmount; i++) {
       addressMintedBalance[msg.sender]++;
-      _safeMint(msg.sender, supply + i);
+      _safeMint(msg.sender, totalMinted + i);
     }
   }
   
   function mintTo(address _to, uint256 _mintAmount) public payable {
-    uint256 supply = totalSupply();
     require(!paused);
     require(_mintAmount > 0);
 
@@ -1261,7 +1260,7 @@ contract Ticket is ERC721Enumerable, Ownable {
 
     for (uint256 i = 1; i <= _mintAmount; i++) {
       addressMintedBalance[_to]++;
-      _safeMint(_to, supply + i);
+      _safeMint(_to, totalMinted + i);
     }
   }
 
