@@ -152,6 +152,7 @@ interface Coin {
 
 /** ================== Main Contract =================== **/
 import "./NFT.sol";
+import "hardhat/console.sol";
 
 contract Control is Ownable {
     using Strings for uint256;
@@ -160,10 +161,11 @@ contract Control is Ownable {
     string public ContractDesc;
     bool public paused = false;
 
-    // 10000 coin to buy ticket
+    // coins to buy a ticket / NFT 
     uint256 public ticketAmountToSell = 10000;  
+    uint256 public NFTAmountToSell = 100000; 
 
-    address private Controller;
+    address public Controller;
     address public nftAddress;
     address public coinAddress;
     address public ticketAddress;
@@ -225,9 +227,15 @@ contract Control is Ownable {
         NFT nft = NFT(nftAddress);
         return nft.walletOfOwner(_owner);       
     }
+    
     function TicketwalletOfOwner(address _owner) public view returns (uint256[] memory) {
         Ticket ticket = Ticket(ticketAddress);
         return ticket.walletOfOwner(_owner);       
+    }
+
+    function CoinAllowance(address owner, address spender) public view returns (uint256) {
+        Coin coin = Coin(coinAddress);
+        return coin.allowance(owner, spender);
     }
 
     // Controller Functions
@@ -263,9 +271,20 @@ contract Control is Ownable {
         return true;
     } //Checked
 
-    function MintNFTbyCoin() public {
+    function MintNFTbyCoin(uint256 _BuyQty) public payable returns (bool) {
     //	1) Check Coin Receive 2) NFT.Mint() => Ticket.Mint()
+        Coin coin = Coin(coinAddress);
+        NFT nft = NFT(nftAddress);
 
+        uint256 coinBalance = CoinBalanceOf(msg.sender);
+        uint256 coinNeed = NFTAmountToSell * _BuyQty ;
+        require(coinBalance >= coinNeed, "You have not enough coin to buy ticket!");
+
+        coin.burn(msg.sender, coinNeed);
+        nft.mintTo{value: msg.value}(msg.sender,_BuyQty);
+
+        emit eventMintTicketbyCoin(msg.sender, _BuyQty, coinNeed, block.timestamp);
+        return true;
     }
 
     function MintTicketbyCoin(uint256 _BuyQty) public payable returns(bool) {
@@ -276,19 +295,15 @@ contract Control is Ownable {
         Ticket ticket = Ticket(ticketAddress);
 
         uint256 coinBalance = CoinBalanceOf(msg.sender);
-        uint256 coinNeed = ticketAmountToSell * _BuyQty;
+        uint256 coinNeed = ticketAmountToSell * _BuyQty ;
         require(coinBalance >= coinNeed, "You have not enough coin to buy ticket!");
 
-        (bool sentAllowance) = coin.increaseAllowance(Controller, coinNeed);
-        require(sentAllowance, "Failed to set Allowance!");
-        (bool sentTransfer) = coin.transferFrom(msg.sender, Controller, coinNeed);
-        require(sentTransfer, "Failed to transfer coins to us!");
-        //coin.burn(msg.sender, coinNeed);
-        ticket.mint{value: msg.value}(_BuyQty);
+        coin.burn(msg.sender, coinNeed);
+        ticket.mintTo{value: msg.value}(msg.sender,_BuyQty);
 
         emit eventMintTicketbyCoin(msg.sender, _BuyQty, coinNeed, block.timestamp);
         return true;
-    }
+    } //Checked
 
     function RedeemPrize(uint256 _tokenId) public {
     //	Ticket.burn()
